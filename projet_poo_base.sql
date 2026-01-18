@@ -2,13 +2,13 @@ create database pharmacie;
 Use pharmacie;
 
 
+
 create table Employe(
 idUser int primary key auto_increment,
 nom varchar(50) not null,
 prenom varchar(50) not null,
 email varchar(50) not null,
 motdepasse varchar(50) not null,
-role varchar(50) not null,
 salaire float,
 check (email like '%@%'),
 check (CHAR_LENGTH(motdepasse) > 8)
@@ -21,10 +21,9 @@ nom varchar(50) not null,
 prenom varchar(50) not null,
 email varchar(50) not null,
 motdepasse varchar(50) not null,
-role varchar(50) not null,
 salaire float,
 check (email like '%@%'),
-check (CHAR_LENGTH(motdepasse) > 8),
+check (CHAR_LENGTH(motdepasse) > 8)
 );
 
 
@@ -128,12 +127,12 @@ check (prixVente>0)
 
 
 
-INSERT INTO Utilisateur (nom, prenom, email, motdepasse, role)
+INSERT INTO Employe (nom, prenom, email, motdepasse)
 VALUES
-('Ben Ali', 'Ahmed', 'ahmed@pharma.tn', 'password123', 'admin'),
-('Trabelsi', 'Sara', 'sara@pharma.tn', 'securepass9', 'employe'),
-('Khaled', 'Youssef', 'youssef@pharma.tn', 'mypassword99', 'employe'),
-('Mansouri', 'Lina', 'lina@pharma.tn', 'strongpass88', 'employe');
+('Ben Ali', 'Ahmed', 'ahmed@pharma.tn', 'password123'),
+('Trabelsi', 'Sara', 'sara@pharma.tn', 'securepass9'),
+('Khaled', 'Youssef', 'youssef@pharma.tn', 'mypassword99'),
+('Mansouri', 'Lina', 'lina@pharma.tn', 'strongpass88');
 
 
 INSERT INTO Fournisseur (nom_fournisseur, num_telephone, adresse_mail)
