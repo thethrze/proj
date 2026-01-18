@@ -2,7 +2,20 @@ create database pharmacie;
 Use pharmacie;
 
 
-create table Utilisateur(
+create table Employe(
+idUser int primary key auto_increment,
+nom varchar(50) not null,
+prenom varchar(50) not null,
+email varchar(50) not null,
+motdepasse varchar(50) not null,
+role varchar(50) not null,
+salaire float,
+check (email like '%@%'),
+check (CHAR_LENGTH(motdepasse) > 8)
+);
+
+
+create table Admin(
 idUser int primary key auto_increment,
 nom varchar(50) not null,
 prenom varchar(50) not null,
@@ -12,8 +25,8 @@ role varchar(50) not null,
 salaire float,
 check (email like '%@%'),
 check (CHAR_LENGTH(motdepasse) > 8),
-check (role in ('employe', 'admin'))
 );
+
 
 
 create table Fournisseur(
