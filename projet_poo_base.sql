@@ -2,7 +2,6 @@ create database pharmacie;
 Use pharmacie;
 
 
-
 create table Employe(
 idUser int primary key auto_increment,
 nom varchar(50) not null,
@@ -10,21 +9,11 @@ prenom varchar(50) not null,
 email varchar(50) not null,
 motdepasse varchar(50) not null,
 salaire float,
+admin boolean,
 check (email like '%@%'),
 check (CHAR_LENGTH(motdepasse) > 8)
 );
 
-
-create table Admin(
-idUser int primary key auto_increment,
-nom varchar(50) not null,
-prenom varchar(50) not null,
-email varchar(50) not null,
-motdepasse varchar(50) not null,
-salaire float,
-check (email like '%@%'),
-check (CHAR_LENGTH(motdepasse) > 8)
-);
 
 
 
@@ -52,7 +41,7 @@ foreign key (fournisseur_id) references Fournisseur(fournisseur_id),
 constraint chk_date
 	check (date_reception >=date_commande or date_reception is null),
 constraint chk_etat
-check (etat in ('new_c','annule','recue')),
+check (etat in ('crée','annule','recue')),
 constraint 
 check (prix_total>0),
 constraint 
@@ -76,7 +65,6 @@ check (statut in ('en Vente','rupture','nouveau'))
 );
 
 
-
 create table Client(
 numClient int primary key auto_increment,
 nom varchar(50),
@@ -92,8 +80,8 @@ idLot int primary key auto_increment,
 quantite int not null,
 DLC date not null,
 prixAchat float not null,
-fournisseur_id int,
-foreign key (fournisseur_id) References Fournisseur(fournisseur_id),
+idF int,
+foreign key (idF) References commandeF(idF),
 RefProduit int,
 foreign key (RefProduit) references Produit(RefProduit),
 check(quantite >0),
@@ -101,11 +89,9 @@ check (prixAchat >0)
 );
 
 
-
 create table CommandeC(
 idc int primary key auto_increment,
 date Date not null,
-modePaiement varchar(50) not null,
 total float not null,
 numClient int,
 foreign key (numClient) references client(numClient)
@@ -127,12 +113,12 @@ check (prixVente>0)
 
 
 
-INSERT INTO Employe (nom, prenom, email, motdepasse)
+INSERT INTO Employe (nom, prenom, email, motdepasse,admin)
 VALUES
-('Ben Ali', 'Ahmed', 'ahmed@pharma.tn', 'password123'),
-('Trabelsi', 'Sara', 'sara@pharma.tn', 'securepass9'),
-('Khaled', 'Youssef', 'youssef@pharma.tn', 'mypassword99'),
-('Mansouri', 'Lina', 'lina@pharma.tn', 'strongpass88');
+('Ben Ali', 'Ahmed', 'ahmed@pharma.tn', 'password123',true),
+('Trabelsi', 'Sara', 'sara@pharma.tn', 'securepass9',false),
+('Khaled', 'Youssef', 'youssef@pharma.tn', 'mypassword99',false),
+('Mansouri', 'Lina', 'lina@pharma.tn', 'strongpass88',false);
 
 
 INSERT INTO Fournisseur (nom_fournisseur, num_telephone, adresse_mail)
@@ -157,114 +143,31 @@ VALUES ('Ben Ali', 'Ahmed', '21622345678'),
 INSERT INTO commandeF (date_commande, date_reception,date_limite,etat, prix_total, fournisseur_id)
 VALUES
 ('2026-01-05', '2026-01-07','2026-01-10','recue', 500, 1),
-('2026-01-10', NULL,'2026-01-15','new_c', 300, 2);
+('2026-01-10', NULL,'2026-01-15','crée', 300, 2);
+
+
+select * from CommandeC;
 
 
 
-INSERT INTO lotStock (quantite, DLC, prixAchat, fournisseur_id, RefProduit)
+
+INSERT INTO lotStock (quantite, DLC, prixAchat, idF, RefProduit)
 VALUES
-(100, '2027-06-30', 2.00, 1, 1),
-(50, '2026-12-31', 3.00, 2, 2);
+(100, '2027-06-30', 2.00, 3, 1),
+(50, '2026-12-31', 3.00, 4, 2);
 
-INSERT INTO CommandeC (date, modePaiement, total, numClient)
+INSERT INTO CommandeC (date, total, numClient)
 VALUES
-('2026-01-12', 'cash', 14.00, 1),
-('2026-01-13', 'card',10.00, 2);
+('2026-01-12', 14.00, 1),
+('2026-01-13',10.00, 2);
 
 
-INSERT INTO LigneCommande (quantite, prixVente, RefProduit)
+INSERT INTO LigneCommande (idc,quantite, prixVente, RefProduit)
 VALUES
-(2, 3.50, 1),
-(1, 5.00, 2);
-
-/*/insertion des valeurs/*/
-
-INSERT INTO Utilisateur (nom, prenom, email, motdepasse, role)
-VALUES
-(nom, prenom, email, motdepasse, role);
+(1,2, 3.50, 1),
+(2,1, 5.00, 2);
 
 
-INSERT INTO Fournisseur (nom_fournisseur, num_telephone, adresse_mail)
-VALUES
-(nom_fournisseur, num_telephone, adresse_mail);
-
-
-INSERT INTO Produit
-VALUES (nom,qtstock,prix,infos,seuil,statut);
-
-INSERT INTO CommandeF
-VALUES (datecommande,null,etat,total);
-
-
-INSERT INTO Client (nom, prenom, telephone)
-VALUES (nom, prenom, telephone);
-
-
-INSERT INTO CommandeC (date, modePaiement, etat, total, numClient)
-VALUES (date, modePaiement, 'new_c', total, numClient);
-
-INSERT INTO LigneCommande (quantite, prixVente, RefProduit)
-VALUES (quantite, prixVente, RefProduit);
-
-INSERT INTO lotStock (quantite, DLC, prixAchat, fournisseur_id, RefProduit)
-VALUES (quantite, DLC, prixAchat, fournisseur_id, RefProduit);
-
-/*/ Suppression des valeurs/*/
-
-Delete from Utilisateur where( idUser=id);
-
-
-Delete from Fournisseur where( fournisseur_id=id);
-
-Delete from Produit where( RefProduit=ref);
-
-Delete from CommandeF where( idF=id);
-
-Delete from Client where( numClient =num);
-
-Delete from CommandeC where( idc = id);
-
-Delete from LigneCommande where( idc = id);
-
-Delete from lotStock where( idLot = id);
-
-/*/ Modification des valeurs/*/
-
-/*/ changer mot de passe/*/
-update utilisateur set motdepasse=(mdp) where (idUser = id);
-
-/*/ changer la date de reception/*/
-update commandef set date_reception=(dt) where( idF = id);
-
-/*/changer l'etat/*/
-update commandef set etat=(etat_saisie) where(idF=id);
-
-/*/ mise a jour quantiteStock/*/
-
-update Produit set quantiteStock=(qnt) where(Ref=reference_pr);
-
-/*/ mise a jour prixvente/*/
-
-update Produit set prixvente=(prix) where(Ref=reference_pr);
-
-/*/ mise a jour statut/*/
-
-update Produit set statut=(stat) where(Ref=reference_pr);
-/*/ mise a jour quantité /*/
-
-update lotstock set quantite=(qnt) where(idLot=id);
-
-/*/ mise a jour prixachat/*/
-
-update lotstock set prixAchat=(prx) where(idLot=id);
-
-/*/ affiche/*/
-select * from produit where(statut =stt);
-
-select
-cl.nom,
-c.*
-from Client cl ,Commandec c where(cl.numClient = c.numClient and cl.numClient = NUM);
 
 
 CREATE USER 'pharmacie_app'@'%' IDENTIFIED BY 'Pharma2026';
