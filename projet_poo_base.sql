@@ -34,7 +34,7 @@ idF int auto_increment primary key,
 date_commande date not null,
 date_reception date,
 date_limite date not null,
-etat varchar(20) not null,
+etat varchar(20) not null default 'crée',
 prix_total float not null,
 fournisseur_id int, 
 foreign key (fournisseur_id) references Fournisseur(fournisseur_id),
@@ -80,6 +80,7 @@ idLot int primary key auto_increment,
 quantite int not null,
 DLC date not null,
 prixAchat float not null,
+recu boolean Default False,
 idF int,
 foreign key (idF) References commandeF(idF),
 RefProduit int,
@@ -151,10 +152,10 @@ select * from CommandeC;
 
 
 
-INSERT INTO lotStock (quantite, DLC, prixAchat, idF, RefProduit)
+INSERT INTO lotStock (quantite, DLC,recu, prixAchat, idF, RefProduit)
 VALUES
-(100, '2027-06-30', 2.00, 3, 1),
-(50, '2026-12-31', 3.00, 4, 2);
+(100, '2027-06-30',false ,2.00, 1, 1),
+(50, '2026-12-31',false, 3.00,2, 2);
 
 INSERT INTO CommandeC (date, total, numClient)
 VALUES
